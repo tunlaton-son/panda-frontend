@@ -18,6 +18,8 @@ import axios from "axios";
 import useSWR from "swr";
 import { Skeleton } from "../components/ui/Skeleton";
 import { cn } from "../utils";
+import { toast } from "sonner";
+import { FastForward, Loader2 } from "lucide-react";
 
 export const Profile = () => {
   const { username } = useParams();
@@ -25,13 +27,50 @@ export const Profile = () => {
 
   const [open, setOpen] = useState(false);
 
-  const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+  const fetcher = (url: string) =>
+    axios
+      .get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => res.data);
 
   const {
     data: profile,
     error,
     isLoading,
+    mutate: fetchProfile,
   } = useSWR(`/api/v1/user?username=${username}`, fetcher);
+
+  const [requestingFollow, setRequestingFollow] = useState<boolean>(false);
+  const follow = async () => {
+    setRequestingFollow(true);
+    try {
+      await axios.post(
+        `/api/v1/following`,
+        {
+          username: username,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      fetchProfile()
+      .finally(() => {
+        setRequestingFollow(false);
+      });
+    } catch (error) {
+      console.error(error);
+      setRequestingFollow(false);
+      toast.error("Something went wrong!");
+    }
+  };
 
   const panes = [
     {
@@ -99,7 +138,6 @@ export const Profile = () => {
               className="cursor-pointer !w-full !h-full"
               src={profile?.profileImage ?? ""}
               avatar
-              
             />
           </div>
         )}
@@ -114,7 +152,23 @@ export const Profile = () => {
         )}
       </div>
 
-      <div className="w-full h-auto flex flex-row justify-end pr-4 min-h-[36px] mt-[16px]">
+      <div className="w-full h-auto flex flex-row justify-end pr-4 min-h-[36px] mt-[16px] gap-x-2">
+        {username !== user.username && token && (
+          <Button
+            basic
+            className={cn("!rounded-full")}
+            onClick={() => {
+              follow();
+            }}
+          >
+            {!requestingFollow && (
+              <>{!isLoading && profile?.following ? "Unfollow" : "Follow"}</>
+            )}
+
+            {requestingFollow && <Loader2 size={16} className="animate-spin" />}
+          </Button>
+        )}
+
         {username === user.username && (
           <Modal
             size="tiny"
