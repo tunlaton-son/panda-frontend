@@ -61,8 +61,7 @@ export const Profile = () => {
         }
       );
 
-      fetchProfile()
-      .finally(() => {
+      fetchProfile().finally(() => {
         setRequestingFollow(false);
       });
     } catch (error) {
@@ -184,7 +183,10 @@ export const Profile = () => {
           >
             <ModalHeader>Edit Profile</ModalHeader>
             <ModalContent>
-              <EditProfile />
+              <EditProfile 
+                fetchProfile={fetchProfile} 
+                setOpen={setOpen}
+              />
             </ModalContent>
           </Modal>
         )}

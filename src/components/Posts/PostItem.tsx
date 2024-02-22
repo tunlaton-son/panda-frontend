@@ -28,8 +28,8 @@ interface PostItemProps {
 
 export const PostItem = ({ post }: PostItemProps) => {
   const [open, setOpen] = React.useState(false);
-  const [liked, setLiked] = React.useState<boolean>(post.liked);
-  const [likedCount, setLikedCount] = React.useState<number>(post.likedCount);
+  const [liked, setLiked] = React.useState<boolean>(false);
+  const [likedCount, setLikedCount] = React.useState<number>( 0);
 
   const { setPost } = usePostStore();
   const { token, user } = useAuth();
@@ -58,6 +58,11 @@ export const PostItem = ({ post }: PostItemProps) => {
   const onClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    setLiked(post?.liked ?? false);
+    setLikedCount(post?.likedCount ?? 0);
+  }, [post])
 
   const likePost = async () => {
     try {

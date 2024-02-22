@@ -15,7 +15,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="w-full h-screen pt-[16px]  pb-[150px] border-l border-r border-gray-300">
+    <div className="w-full h-auto min-h-screen pt-[16px]  pb-[150px] border-l border-r border-gray-300">
       {token && <PostBox />}
       <Posts />
     </div>

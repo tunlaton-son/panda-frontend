@@ -18,9 +18,15 @@ const schema = z.object({
 
 type FormFields = z.infer<typeof schema>;
 
-interface EditProfileProps {}
+interface EditProfileProps {
+  fetchProfile: () => void;
+  setOpen: (open: boolean) => void;
+}
 
-const EditProfile = () => {
+const EditProfile = ({ 
+    fetchProfile, 
+    setOpen 
+}: EditProfileProps) => {
   const navigate = useNavigate();
   const [profileImage, setProfileImage] = useState<File>();
   const [coverImage, setCoverImage] = useState<File>();
@@ -85,7 +91,8 @@ const EditProfile = () => {
         .then((res) => {
           toast.success("Save success");
           refreshToken(res.data.token);
-          window.location.reload();
+          fetchProfile();
+          setOpen(false);
         })
         .catch((err) => {
           toast.error("Something went wrong!");

@@ -27,6 +27,7 @@ const PostBox = ({ postId, onClose }: PostBoxProps) => {
     handleSubmit,
     setError,
     setValue,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     defaultValues: {
@@ -39,7 +40,7 @@ const PostBox = ({ postId, onClose }: PostBoxProps) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+  const onSubmit: SubmitHandler<FormFields> = async (data, e) => {
     if (!postId) {
       try {
         const res = await axios.post("/api/v1/post", data, {
@@ -57,8 +58,10 @@ const PostBox = ({ postId, onClose }: PostBoxProps) => {
         toast.success("Post Success!");
         setValue("body", "");
         queryClient.refetchQueries({
-          queryKey: ["posts"],
+          queryKey: ["post"],
         });
+
+        e?.target.reset();
         return res.data;
       } catch (e) {
         console.log(e);
@@ -93,6 +96,8 @@ const PostBox = ({ postId, onClose }: PostBoxProps) => {
         queryClient.refetchQueries({
           queryKey: ["comments"],
         });
+
+        e?.target.reset();
         navigate(`/post/${postId}`);
         return res.data;
       } catch (e) {
