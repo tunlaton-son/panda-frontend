@@ -29,7 +29,7 @@ export const Profile = () => {
   const [open, setOpen] = useState(false);
 
   const fetcher = (url: string) =>
-  axiosInstance
+    axiosInstance
       .get(url, {
         headers: {
           "Content-Type": "application/json",
@@ -184,10 +184,7 @@ export const Profile = () => {
           >
             <ModalHeader>Edit Profile</ModalHeader>
             <ModalContent>
-              <EditProfile 
-                fetchProfile={fetchProfile} 
-                setOpen={setOpen}
-              />
+              <EditProfile fetchProfile={fetchProfile} setOpen={setOpen} />
             </ModalContent>
           </Modal>
         )}
