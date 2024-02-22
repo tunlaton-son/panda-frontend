@@ -20,6 +20,7 @@ import { Skeleton } from "../components/ui/Skeleton";
 import { cn } from "../utils";
 import { toast } from "sonner";
 import { FastForward, Loader2 } from "lucide-react";
+import axiosInstance from "../utils/axiosInstance";
 
 export const Profile = () => {
   const { username } = useParams();
@@ -28,7 +29,7 @@ export const Profile = () => {
   const [open, setOpen] = useState(false);
 
   const fetcher = (url: string) =>
-    axios
+  axiosInstance
       .get(url, {
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +49,7 @@ export const Profile = () => {
   const follow = async () => {
     setRequestingFollow(true);
     try {
-      await axios.post(
+      await axiosInstance.post(
         `/api/v1/following`,
         {
           username: username,

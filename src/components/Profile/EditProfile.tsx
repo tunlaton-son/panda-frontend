@@ -31,7 +31,7 @@ const EditProfile = ({
   const [profileImage, setProfileImage] = useState<File>();
   const [coverImage, setCoverImage] = useState<File>();
 
-  const { token, user, refreshToken, logout } = useAuth();
+  const { token, user, resetToken, logout } = useAuth();
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { files } = event.target;
@@ -90,7 +90,7 @@ const EditProfile = ({
       })
         .then((res) => {
           toast.success("Save success");
-          refreshToken(res.data.token);
+          resetToken(res.data.token);
           fetchProfile();
           setOpen(false);
         })

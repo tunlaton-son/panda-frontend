@@ -17,6 +17,7 @@ import { Feather, Loader2 } from "lucide-react";
 import CommentItem from "../Comments/CommentItem";
 import { useInView } from "react-intersection-observer";
 import useSWR from "swr";
+import axiosInstance from "../../utils/axiosInstance";
 
 interface PostProps {}
 
@@ -25,7 +26,7 @@ const Post = ({}: PostProps) => {
   const { token } = useAuth();
 
   const fetchCommentsById = async ({ pageParam }: { pageParam: number }) => {
-    const res = await fetch(
+    const res = await axiosInstance.get(
       `/api/v1/comments?postId=${id}&page=${pageParam}&size=10`,
       {
         headers: {
@@ -35,7 +36,7 @@ const Post = ({}: PostProps) => {
       }
     );
 
-    return res.json();
+    return res.data;
   };
 
   const {
@@ -61,7 +62,7 @@ const Post = ({}: PostProps) => {
   }, [inView, fetchNextPage, hasNextPage]);
 
   const fetcher = (url: string) =>
-    axios
+    axiosInstance
       .get(url, {
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +86,7 @@ const Post = ({}: PostProps) => {
 
   return (
     <div className="pt-[16px] border-l border-r min-h-screen h-auto">
-      {!isLoading && <PostItem post={postData}/>}
+      {!isLoading && <PostItem post={postData} />}
       {isLoading && <PostItemSkeleton />}
       {id && token && <PostBox postId={id} />}
 

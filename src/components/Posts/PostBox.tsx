@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import axiosInstance from "../../utils/axiosInstance";
 
 const schema = z.object({
   body: z.string().min(1),
@@ -43,7 +44,7 @@ const PostBox = ({ postId, onClose }: PostBoxProps) => {
   const onSubmit: SubmitHandler<FormFields> = async (data, e) => {
     if (!postId) {
       try {
-        const res = await axios.post("/api/v1/post", data, {
+        const res = await axiosInstance.post("/api/v1/post", data, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -68,7 +69,7 @@ const PostBox = ({ postId, onClose }: PostBoxProps) => {
       }
     } else {
       try {
-        const res = await axios.post(
+        const res = await axiosInstance.post(
           "/api/v1/post/reply",
           {
             postId: postId,

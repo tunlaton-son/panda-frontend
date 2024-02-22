@@ -60,7 +60,7 @@ const Signin = () => {
         return;
       }
 
-      login(res.data.token);
+      login(res.data);
       toast.success("Login Success!");
     } catch (e) {
       console.log(e);

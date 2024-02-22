@@ -11,6 +11,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { usePositionStore } from "../../store/positionStore";
 import { useInView } from "react-intersection-observer";
 import { Loader2 } from "lucide-react";
+import axiosInstance from "../../utils/axiosInstance";
 
 interface PostsProps {
   isProfile?: boolean;
@@ -32,15 +33,20 @@ const Posts = ({ isProfile, userName }: PostsProps) => {
       ? "/api/v1/post?page=" + pageParam + "&size=10&username=" + userName
       : "/api/v1/post?page=" + pageParam + "&size=10";
 
-    const res = await fetch(url, {
-      method: "GET",
+    // const res = await fetch(url, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // });
+    const res = await axiosInstance.get(url, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
-
-    return res.json();
+    return res.data;
   };
 
   const {

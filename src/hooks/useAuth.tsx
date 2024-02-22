@@ -6,7 +6,9 @@ import * as jose from "jose";
 type ContextType = {
   token: any;
   setToken: (data: any) => Promise<void>;
-  refreshToken: (data: any) => Promise<void>;
+  refreshToken: any;
+  setRefreshToken: (data: any) => Promise<void>;
+  resetToken: (data: any) => Promise<void>;
   user: any;
   login: (data: any) => Promise<void>;
   logout: () => void;
@@ -16,21 +18,23 @@ const AuthContext = createContext<ContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: any) => {
   const [token, setToken] = useLocalStorage("token", "");
+  const [refreshToken, setRefreshToken] = useLocalStorage("refreshToken", "");
   const [user, setUser] = useLocalStorage("user", {
     name: "",
     username: "",
     email: "",
     profileImage: "",
-    coverImage: "",
+    coverImage: ""
   });
 
   const navigate = useNavigate();
 
   // call this function when you want to authenticate the user
   const login = async (data: any) => {
-    setToken(data);
+    setToken(data.token);
+    setRefreshToken(data.refreshToken);
 
-    let decoded = jose.decodeJwt(data) as any;
+    let decoded = jose.decodeJwt(data.token) as any;
     setUser({
       name: decoded.name,
       username: decoded.username,
@@ -43,10 +47,10 @@ export const AuthProvider = ({ children }: any) => {
     window.location.href = "/";
   };
 
-  const refreshToken = async (data: any) => {
-    setToken(data);
-
-    let decoded = jose.decodeJwt(data) as any;
+  const resetToken = async (data: any) => {
+    setToken(data.token);
+    setRefreshToken(data.refreshToken);
+    let decoded = jose.decodeJwt(data.token) as any;
     setUser({
       name: decoded.name,
       username: decoded.username,
@@ -73,6 +77,8 @@ export const AuthProvider = ({ children }: any) => {
       token,
       setToken,
       refreshToken,
+      setRefreshToken,
+      resetToken,
       user,
       login,
       logout,

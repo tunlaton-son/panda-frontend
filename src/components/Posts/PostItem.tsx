@@ -21,6 +21,7 @@ import { Skeleton } from "../ui/Skeleton";
 import axios from "axios";
 import { toast } from "sonner";
 import { cn } from "../../utils";
+import axiosInstance from "../../utils/axiosInstance";
 
 interface PostItemProps {
   post: Post;
@@ -66,7 +67,7 @@ export const PostItem = ({ post }: PostItemProps) => {
 
   const likePost = async () => {
     try {
-      await axios({
+      await axiosInstance({
         url: `/api/v1/post/like?id=${post.id}&username=${user.username}`,
         method: "patch",
         headers: {
