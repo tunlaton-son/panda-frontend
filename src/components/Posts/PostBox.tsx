@@ -97,8 +97,11 @@ const PostBox = ({ postId, onClose }: PostBoxProps) => {
           queryKey: ["comments"],
         });
 
+        queryClient.refetchQueries({
+          queryKey: ["post"],
+        });
+
         e?.target.reset();
-        navigate(`/post/${postId}`);
         return res.data;
       } catch (e) {
         console.log(e);
