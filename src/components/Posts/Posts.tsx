@@ -12,6 +12,7 @@ import { usePositionStore } from "../../store/positionStore";
 import { useInView } from "react-intersection-observer";
 import { Loader2 } from "lucide-react";
 import axiosInstance from "../../utils/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 interface PostsProps {
   isProfile?: boolean;
@@ -24,29 +25,28 @@ const Posts = ({ isProfile, userName }: PostsProps) => {
   const { ref, inView } = useInView();
   const { token, user } = useAuth();
 
+  const navigate = useNavigate();
+
   const fetchPosts = async ({ pageParam }: { pageParam: number }) => {
-    if (isProfile && !userName) {
-      return [];
+    try {
+      if (isProfile && !userName) {
+        return [];
+      }
+
+      let url = isProfile
+        ? "/api/v1/post?page=" + pageParam + "&size=10&username=" + userName
+        : "/api/v1/post?page=" + pageParam + "&size=10";
+
+      const res = await axiosInstance.get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data;
+    } catch (err) {
+      console.log(err);
     }
-
-    let url = isProfile
-      ? "/api/v1/post?page=" + pageParam + "&size=10&username=" + userName
-      : "/api/v1/post?page=" + pageParam + "&size=10";
-
-    // const res = await fetch(url, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // });
-    const res = await axiosInstance.get(url, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return res.data;
   };
 
   const {

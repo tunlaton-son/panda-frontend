@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
 import { error } from "console";
 import * as jose from "jose";
+import { useNavigate } from "react-router-dom";
 
 const axiosInstance = axios.create();
 
@@ -32,13 +33,7 @@ axiosInstance.interceptors.request.use(
           refreshToken: refreshToken,
         });
 
-        // console.log(response.status);
-        // if (response.status === 403) {
-        //   localStorage.setItem("token", "");
-        //   localStorage.setItem("refreshToken", "");
-        //   window.location.href = "/sign-in";
-        //   return config;
-        // }
+        console.log(response.status);
 
         const restoken = response.data.token;
         const resRefreshToken = response.data.refreshToken;
@@ -49,6 +44,9 @@ axiosInstance.interceptors.request.use(
       }
     } catch (error) {
       console.log(error);
+      localStorage.setItem("token", "");
+      localStorage.setItem("refreshToken", "");
+      window.location.href = '/sign-in';
     }
     return config;
   },
