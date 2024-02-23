@@ -210,12 +210,24 @@ export const Profile = () => {
 
         <div className="w-full flex flex-row gap-x-4">
           <div className="flex flex-row gap-x-1">
-            <span className="font-bold">0</span>
-            <span className="font-thin">Following</span>
+            {isLoading ? (
+              <Skeleton className="h-4 !w-24 skeleton skeleton-text mt-2" />
+            ) : (
+              <>
+                <span className="font-bold">{profile?.followings ?? 0}</span>
+                <span className="font-thin">Following</span>
+              </>
+            )}{" "}
           </div>
           <div className="flex flex-row gap-x-1">
-            <span className="font-bold">0</span>
-            <span className="font-thin">Followers</span>
+            {isLoading ? (
+              <Skeleton className="h-4 !w-24 skeleton skeleton-text mt-2" />
+            ) : (
+              <>
+                <span className="font-bold">{profile?.followers ?? 0}</span>
+                <span className="font-thin">Followers</span>
+              </>
+            )}{" "}
           </div>
         </div>
       </div>

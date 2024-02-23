@@ -33,8 +33,6 @@ axiosInstance.interceptors.request.use(
           refreshToken: refreshToken,
         });
 
-        console.log(response.status);
-
         const restoken = response.data.token;
         const resRefreshToken = response.data.refreshToken;
 
