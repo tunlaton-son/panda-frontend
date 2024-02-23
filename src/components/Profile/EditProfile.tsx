@@ -11,6 +11,7 @@ import { User } from "../../interface";
 import { useNavigate } from "react-router-dom";
 import { cn } from "../../utils";
 import { Loader2 } from "lucide-react";
+import axiosInstance from "../../utils/axiosInstance";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -23,10 +24,7 @@ interface EditProfileProps {
   setOpen: (open: boolean) => void;
 }
 
-const EditProfile = ({ 
-    fetchProfile, 
-    setOpen 
-}: EditProfileProps) => {
+const EditProfile = ({ fetchProfile, setOpen }: EditProfileProps) => {
   const navigate = useNavigate();
   const [profileImage, setProfileImage] = useState<File>();
   const [coverImage, setCoverImage] = useState<File>();
@@ -79,18 +77,16 @@ const EditProfile = ({
       };
       formData.append("data", JSON.stringify(jsonData));
 
-      await axios({
-        url: "/api/v1/user",
-        method: "patch",
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-        data: formData,
-      })
+      await axiosInstance
+        .patch("/api/v1/user", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((res) => {
           toast.success("Save success");
-          resetToken(res.data.token);
+          resetToken(res.data);
           fetchProfile();
           setOpen(false);
         })
